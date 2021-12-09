@@ -10,9 +10,8 @@ We recommend using the go types in this repo. You may serialize them directly to
 
 ## Compatibility matrix
 
-| ---------------------------------- |---------------------------|
 | Kubernetes Version in your Project | Import controllermesh-api |
-| ---------------------------------- |---------------------------| 
+|------------------------------------|---------------------------|
 | < 1.18                             | v0.x.y-legacy             |
 | >= 1.18                            | v0.x.y                    |
 
