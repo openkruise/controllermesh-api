@@ -19,7 +19,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
 	"time"
 
 	scheme "github.com/openkruise/controllermesh-api/client/clientset/versioned/scheme"
@@ -38,15 +37,15 @@ type VirtualAppsGetter interface {
 
 // VirtualAppInterface has methods to work with VirtualApp resources.
 type VirtualAppInterface interface {
-	Create(ctx context.Context, virtualApp *v1alpha1.VirtualApp, opts v1.CreateOptions) (*v1alpha1.VirtualApp, error)
-	Update(ctx context.Context, virtualApp *v1alpha1.VirtualApp, opts v1.UpdateOptions) (*v1alpha1.VirtualApp, error)
-	UpdateStatus(ctx context.Context, virtualApp *v1alpha1.VirtualApp, opts v1.UpdateOptions) (*v1alpha1.VirtualApp, error)
-	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
-	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
-	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1alpha1.VirtualApp, error)
-	List(ctx context.Context, opts v1.ListOptions) (*v1alpha1.VirtualAppList, error)
-	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.VirtualApp, err error)
+	Create(*v1alpha1.VirtualApp) (*v1alpha1.VirtualApp, error)
+	Update(*v1alpha1.VirtualApp) (*v1alpha1.VirtualApp, error)
+	UpdateStatus(*v1alpha1.VirtualApp) (*v1alpha1.VirtualApp, error)
+	Delete(name string, options *v1.DeleteOptions) error
+	DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error
+	Get(name string, options v1.GetOptions) (*v1alpha1.VirtualApp, error)
+	List(opts v1.ListOptions) (*v1alpha1.VirtualAppList, error)
+	Watch(opts v1.ListOptions) (watch.Interface, error)
+	Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.VirtualApp, err error)
 	VirtualAppExpansion
 }
 
@@ -65,20 +64,20 @@ func newVirtualApps(c *CtrlmeshV1alpha1Client, namespace string) *virtualApps {
 }
 
 // Get takes name of the virtualApp, and returns the corresponding virtualApp object, and an error if there is any.
-func (c *virtualApps) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.VirtualApp, err error) {
+func (c *virtualApps) Get(name string, options v1.GetOptions) (result *v1alpha1.VirtualApp, err error) {
 	result = &v1alpha1.VirtualApp{}
 	err = c.client.Get().
 		Namespace(c.ns).
 		Resource("virtualapps").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // List takes label and field selectors, and returns the list of VirtualApps that match those selectors.
-func (c *virtualApps) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.VirtualAppList, err error) {
+func (c *virtualApps) List(opts v1.ListOptions) (result *v1alpha1.VirtualAppList, err error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -89,13 +88,13 @@ func (c *virtualApps) List(ctx context.Context, opts v1.ListOptions) (result *v1
 		Resource("virtualapps").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // Watch returns a watch.Interface that watches the requested virtualApps.
-func (c *virtualApps) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *virtualApps) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -106,90 +105,87 @@ func (c *virtualApps) Watch(ctx context.Context, opts v1.ListOptions) (watch.Int
 		Resource("virtualapps").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Watch(ctx)
+		Watch()
 }
 
 // Create takes the representation of a virtualApp and creates it.  Returns the server's representation of the virtualApp, and an error, if there is any.
-func (c *virtualApps) Create(ctx context.Context, virtualApp *v1alpha1.VirtualApp, opts v1.CreateOptions) (result *v1alpha1.VirtualApp, err error) {
+func (c *virtualApps) Create(virtualApp *v1alpha1.VirtualApp) (result *v1alpha1.VirtualApp, err error) {
 	result = &v1alpha1.VirtualApp{}
 	err = c.client.Post().
 		Namespace(c.ns).
 		Resource("virtualapps").
-		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(virtualApp).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // Update takes the representation of a virtualApp and updates it. Returns the server's representation of the virtualApp, and an error, if there is any.
-func (c *virtualApps) Update(ctx context.Context, virtualApp *v1alpha1.VirtualApp, opts v1.UpdateOptions) (result *v1alpha1.VirtualApp, err error) {
+func (c *virtualApps) Update(virtualApp *v1alpha1.VirtualApp) (result *v1alpha1.VirtualApp, err error) {
 	result = &v1alpha1.VirtualApp{}
 	err = c.client.Put().
 		Namespace(c.ns).
 		Resource("virtualapps").
 		Name(virtualApp.Name).
-		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(virtualApp).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *virtualApps) UpdateStatus(ctx context.Context, virtualApp *v1alpha1.VirtualApp, opts v1.UpdateOptions) (result *v1alpha1.VirtualApp, err error) {
+
+func (c *virtualApps) UpdateStatus(virtualApp *v1alpha1.VirtualApp) (result *v1alpha1.VirtualApp, err error) {
 	result = &v1alpha1.VirtualApp{}
 	err = c.client.Put().
 		Namespace(c.ns).
 		Resource("virtualapps").
 		Name(virtualApp.Name).
 		SubResource("status").
-		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(virtualApp).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // Delete takes name of the virtualApp and deletes it. Returns an error if one occurs.
-func (c *virtualApps) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *virtualApps) Delete(name string, options *v1.DeleteOptions) error {
 	return c.client.Delete().
 		Namespace(c.ns).
 		Resource("virtualapps").
 		Name(name).
-		Body(&opts).
-		Do(ctx).
+		Body(options).
+		Do().
 		Error()
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *virtualApps) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *virtualApps) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
 	var timeout time.Duration
-	if listOpts.TimeoutSeconds != nil {
-		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
+	if listOptions.TimeoutSeconds != nil {
+		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
 		Namespace(c.ns).
 		Resource("virtualapps").
-		VersionedParams(&listOpts, scheme.ParameterCodec).
+		VersionedParams(&listOptions, scheme.ParameterCodec).
 		Timeout(timeout).
-		Body(&opts).
-		Do(ctx).
+		Body(options).
+		Do().
 		Error()
 }
 
 // Patch applies the patch and returns the patched virtualApp.
-func (c *virtualApps) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.VirtualApp, err error) {
+func (c *virtualApps) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.VirtualApp, err error) {
 	result = &v1alpha1.VirtualApp{}
 	err = c.client.Patch(pt).
 		Namespace(c.ns).
 		Resource("virtualapps").
-		Name(name).
 		SubResource(subresources...).
-		VersionedParams(&opts, scheme.ParameterCodec).
+		Name(name).
 		Body(data).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }

@@ -26,10 +26,8 @@ import (
 )
 
 // VirtualAppLister helps list VirtualApps.
-// All objects returned here must be treated as read-only.
 type VirtualAppLister interface {
 	// List lists all VirtualApps in the indexer.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1alpha1.VirtualApp, err error)
 	// VirtualApps returns an object that can list and get VirtualApps.
 	VirtualApps(namespace string) VirtualAppNamespaceLister
@@ -60,13 +58,10 @@ func (s *virtualAppLister) VirtualApps(namespace string) VirtualAppNamespaceList
 }
 
 // VirtualAppNamespaceLister helps list and get VirtualApps.
-// All objects returned here must be treated as read-only.
 type VirtualAppNamespaceLister interface {
 	// List lists all VirtualApps in the indexer for a given namespace.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1alpha1.VirtualApp, err error)
 	// Get retrieves the VirtualApp from the indexer for a given namespace and name.
-	// Objects returned here must be treated as read-only.
 	Get(name string) (*v1alpha1.VirtualApp, error)
 	VirtualAppNamespaceListerExpansion
 }

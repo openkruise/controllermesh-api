@@ -19,7 +19,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
 	time "time"
 
 	versioned "github.com/openkruise/controllermesh-api/client/clientset/versioned"
@@ -61,13 +60,13 @@ func NewFilteredManagerStateInformer(client versioned.Interface, resyncPeriod ti
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CtrlmeshV1alpha1().ManagerStates().List(context.TODO(), options)
+				return client.CtrlmeshV1alpha1().ManagerStates().List(options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CtrlmeshV1alpha1().ManagerStates().Watch(context.TODO(), options)
+				return client.CtrlmeshV1alpha1().ManagerStates().Watch(options)
 			},
 		},
 		&ctrlmeshv1alpha1.ManagerState{},

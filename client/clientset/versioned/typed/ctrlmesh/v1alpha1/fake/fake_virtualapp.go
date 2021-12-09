@@ -19,8 +19,6 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "github.com/openkruise/controllermesh-api/ctrlmesh/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
@@ -41,7 +39,7 @@ var virtualappsResource = schema.GroupVersionResource{Group: "ctrlmesh.kruise.io
 var virtualappsKind = schema.GroupVersionKind{Group: "ctrlmesh.kruise.io", Version: "v1alpha1", Kind: "VirtualApp"}
 
 // Get takes name of the virtualApp, and returns the corresponding virtualApp object, and an error if there is any.
-func (c *FakeVirtualApps) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.VirtualApp, err error) {
+func (c *FakeVirtualApps) Get(name string, options v1.GetOptions) (result *v1alpha1.VirtualApp, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewGetAction(virtualappsResource, c.ns, name), &v1alpha1.VirtualApp{})
 
@@ -52,7 +50,7 @@ func (c *FakeVirtualApps) Get(ctx context.Context, name string, options v1.GetOp
 }
 
 // List takes label and field selectors, and returns the list of VirtualApps that match those selectors.
-func (c *FakeVirtualApps) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.VirtualAppList, err error) {
+func (c *FakeVirtualApps) List(opts v1.ListOptions) (result *v1alpha1.VirtualAppList, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewListAction(virtualappsResource, virtualappsKind, c.ns, opts), &v1alpha1.VirtualAppList{})
 
@@ -74,14 +72,14 @@ func (c *FakeVirtualApps) List(ctx context.Context, opts v1.ListOptions) (result
 }
 
 // Watch returns a watch.Interface that watches the requested virtualApps.
-func (c *FakeVirtualApps) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeVirtualApps) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(virtualappsResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a virtualApp and creates it.  Returns the server's representation of the virtualApp, and an error, if there is any.
-func (c *FakeVirtualApps) Create(ctx context.Context, virtualApp *v1alpha1.VirtualApp, opts v1.CreateOptions) (result *v1alpha1.VirtualApp, err error) {
+func (c *FakeVirtualApps) Create(virtualApp *v1alpha1.VirtualApp) (result *v1alpha1.VirtualApp, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewCreateAction(virtualappsResource, c.ns, virtualApp), &v1alpha1.VirtualApp{})
 
@@ -92,7 +90,7 @@ func (c *FakeVirtualApps) Create(ctx context.Context, virtualApp *v1alpha1.Virtu
 }
 
 // Update takes the representation of a virtualApp and updates it. Returns the server's representation of the virtualApp, and an error, if there is any.
-func (c *FakeVirtualApps) Update(ctx context.Context, virtualApp *v1alpha1.VirtualApp, opts v1.UpdateOptions) (result *v1alpha1.VirtualApp, err error) {
+func (c *FakeVirtualApps) Update(virtualApp *v1alpha1.VirtualApp) (result *v1alpha1.VirtualApp, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewUpdateAction(virtualappsResource, c.ns, virtualApp), &v1alpha1.VirtualApp{})
 
@@ -104,7 +102,7 @@ func (c *FakeVirtualApps) Update(ctx context.Context, virtualApp *v1alpha1.Virtu
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeVirtualApps) UpdateStatus(ctx context.Context, virtualApp *v1alpha1.VirtualApp, opts v1.UpdateOptions) (*v1alpha1.VirtualApp, error) {
+func (c *FakeVirtualApps) UpdateStatus(virtualApp *v1alpha1.VirtualApp) (*v1alpha1.VirtualApp, error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewUpdateSubresourceAction(virtualappsResource, "status", c.ns, virtualApp), &v1alpha1.VirtualApp{})
 
@@ -115,7 +113,7 @@ func (c *FakeVirtualApps) UpdateStatus(ctx context.Context, virtualApp *v1alpha1
 }
 
 // Delete takes name of the virtualApp and deletes it. Returns an error if one occurs.
-func (c *FakeVirtualApps) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeVirtualApps) Delete(name string, options *v1.DeleteOptions) error {
 	_, err := c.Fake.
 		Invokes(testing.NewDeleteAction(virtualappsResource, c.ns, name), &v1alpha1.VirtualApp{})
 
@@ -123,15 +121,15 @@ func (c *FakeVirtualApps) Delete(ctx context.Context, name string, opts v1.Delet
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeVirtualApps) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(virtualappsResource, c.ns, listOpts)
+func (c *FakeVirtualApps) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
+	action := testing.NewDeleteCollectionAction(virtualappsResource, c.ns, listOptions)
 
 	_, err := c.Fake.Invokes(action, &v1alpha1.VirtualAppList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched virtualApp.
-func (c *FakeVirtualApps) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.VirtualApp, err error) {
+func (c *FakeVirtualApps) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.VirtualApp, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewPatchSubresourceAction(virtualappsResource, c.ns, name, pt, data, subresources...), &v1alpha1.VirtualApp{})
 

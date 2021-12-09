@@ -19,7 +19,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
 	"time"
 
 	scheme "github.com/openkruise/controllermesh-api/client/clientset/versioned/scheme"
@@ -38,15 +37,15 @@ type ManagerStatesGetter interface {
 
 // ManagerStateInterface has methods to work with ManagerState resources.
 type ManagerStateInterface interface {
-	Create(ctx context.Context, managerState *v1alpha1.ManagerState, opts v1.CreateOptions) (*v1alpha1.ManagerState, error)
-	Update(ctx context.Context, managerState *v1alpha1.ManagerState, opts v1.UpdateOptions) (*v1alpha1.ManagerState, error)
-	UpdateStatus(ctx context.Context, managerState *v1alpha1.ManagerState, opts v1.UpdateOptions) (*v1alpha1.ManagerState, error)
-	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
-	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
-	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1alpha1.ManagerState, error)
-	List(ctx context.Context, opts v1.ListOptions) (*v1alpha1.ManagerStateList, error)
-	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ManagerState, err error)
+	Create(*v1alpha1.ManagerState) (*v1alpha1.ManagerState, error)
+	Update(*v1alpha1.ManagerState) (*v1alpha1.ManagerState, error)
+	UpdateStatus(*v1alpha1.ManagerState) (*v1alpha1.ManagerState, error)
+	Delete(name string, options *v1.DeleteOptions) error
+	DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error
+	Get(name string, options v1.GetOptions) (*v1alpha1.ManagerState, error)
+	List(opts v1.ListOptions) (*v1alpha1.ManagerStateList, error)
+	Watch(opts v1.ListOptions) (watch.Interface, error)
+	Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.ManagerState, err error)
 	ManagerStateExpansion
 }
 
@@ -63,19 +62,19 @@ func newManagerStates(c *CtrlmeshV1alpha1Client) *managerStates {
 }
 
 // Get takes name of the managerState, and returns the corresponding managerState object, and an error if there is any.
-func (c *managerStates) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ManagerState, err error) {
+func (c *managerStates) Get(name string, options v1.GetOptions) (result *v1alpha1.ManagerState, err error) {
 	result = &v1alpha1.ManagerState{}
 	err = c.client.Get().
 		Resource("managerstates").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // List takes label and field selectors, and returns the list of ManagerStates that match those selectors.
-func (c *managerStates) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.ManagerStateList, err error) {
+func (c *managerStates) List(opts v1.ListOptions) (result *v1alpha1.ManagerStateList, err error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -85,13 +84,13 @@ func (c *managerStates) List(ctx context.Context, opts v1.ListOptions) (result *
 		Resource("managerstates").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // Watch returns a watch.Interface that watches the requested managerStates.
-func (c *managerStates) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *managerStates) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -101,84 +100,81 @@ func (c *managerStates) Watch(ctx context.Context, opts v1.ListOptions) (watch.I
 		Resource("managerstates").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Watch(ctx)
+		Watch()
 }
 
 // Create takes the representation of a managerState and creates it.  Returns the server's representation of the managerState, and an error, if there is any.
-func (c *managerStates) Create(ctx context.Context, managerState *v1alpha1.ManagerState, opts v1.CreateOptions) (result *v1alpha1.ManagerState, err error) {
+func (c *managerStates) Create(managerState *v1alpha1.ManagerState) (result *v1alpha1.ManagerState, err error) {
 	result = &v1alpha1.ManagerState{}
 	err = c.client.Post().
 		Resource("managerstates").
-		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(managerState).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // Update takes the representation of a managerState and updates it. Returns the server's representation of the managerState, and an error, if there is any.
-func (c *managerStates) Update(ctx context.Context, managerState *v1alpha1.ManagerState, opts v1.UpdateOptions) (result *v1alpha1.ManagerState, err error) {
+func (c *managerStates) Update(managerState *v1alpha1.ManagerState) (result *v1alpha1.ManagerState, err error) {
 	result = &v1alpha1.ManagerState{}
 	err = c.client.Put().
 		Resource("managerstates").
 		Name(managerState.Name).
-		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(managerState).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *managerStates) UpdateStatus(ctx context.Context, managerState *v1alpha1.ManagerState, opts v1.UpdateOptions) (result *v1alpha1.ManagerState, err error) {
+
+func (c *managerStates) UpdateStatus(managerState *v1alpha1.ManagerState) (result *v1alpha1.ManagerState, err error) {
 	result = &v1alpha1.ManagerState{}
 	err = c.client.Put().
 		Resource("managerstates").
 		Name(managerState.Name).
 		SubResource("status").
-		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(managerState).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // Delete takes name of the managerState and deletes it. Returns an error if one occurs.
-func (c *managerStates) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *managerStates) Delete(name string, options *v1.DeleteOptions) error {
 	return c.client.Delete().
 		Resource("managerstates").
 		Name(name).
-		Body(&opts).
-		Do(ctx).
+		Body(options).
+		Do().
 		Error()
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *managerStates) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *managerStates) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
 	var timeout time.Duration
-	if listOpts.TimeoutSeconds != nil {
-		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
+	if listOptions.TimeoutSeconds != nil {
+		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
 		Resource("managerstates").
-		VersionedParams(&listOpts, scheme.ParameterCodec).
+		VersionedParams(&listOptions, scheme.ParameterCodec).
 		Timeout(timeout).
-		Body(&opts).
-		Do(ctx).
+		Body(options).
+		Do().
 		Error()
 }
 
 // Patch applies the patch and returns the patched managerState.
-func (c *managerStates) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ManagerState, err error) {
+func (c *managerStates) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.ManagerState, err error) {
 	result = &v1alpha1.ManagerState{}
 	err = c.client.Patch(pt).
 		Resource("managerstates").
-		Name(name).
 		SubResource(subresources...).
-		VersionedParams(&opts, scheme.ParameterCodec).
+		Name(name).
 		Body(data).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }

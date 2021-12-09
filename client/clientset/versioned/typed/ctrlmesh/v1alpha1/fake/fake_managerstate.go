@@ -19,8 +19,6 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "github.com/openkruise/controllermesh-api/ctrlmesh/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
@@ -40,7 +38,7 @@ var managerstatesResource = schema.GroupVersionResource{Group: "ctrlmesh.kruise.
 var managerstatesKind = schema.GroupVersionKind{Group: "ctrlmesh.kruise.io", Version: "v1alpha1", Kind: "ManagerState"}
 
 // Get takes name of the managerState, and returns the corresponding managerState object, and an error if there is any.
-func (c *FakeManagerStates) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ManagerState, err error) {
+func (c *FakeManagerStates) Get(name string, options v1.GetOptions) (result *v1alpha1.ManagerState, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootGetAction(managerstatesResource, name), &v1alpha1.ManagerState{})
 	if obj == nil {
@@ -50,7 +48,7 @@ func (c *FakeManagerStates) Get(ctx context.Context, name string, options v1.Get
 }
 
 // List takes label and field selectors, and returns the list of ManagerStates that match those selectors.
-func (c *FakeManagerStates) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.ManagerStateList, err error) {
+func (c *FakeManagerStates) List(opts v1.ListOptions) (result *v1alpha1.ManagerStateList, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootListAction(managerstatesResource, managerstatesKind, opts), &v1alpha1.ManagerStateList{})
 	if obj == nil {
@@ -71,13 +69,13 @@ func (c *FakeManagerStates) List(ctx context.Context, opts v1.ListOptions) (resu
 }
 
 // Watch returns a watch.Interface that watches the requested managerStates.
-func (c *FakeManagerStates) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeManagerStates) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewRootWatchAction(managerstatesResource, opts))
 }
 
 // Create takes the representation of a managerState and creates it.  Returns the server's representation of the managerState, and an error, if there is any.
-func (c *FakeManagerStates) Create(ctx context.Context, managerState *v1alpha1.ManagerState, opts v1.CreateOptions) (result *v1alpha1.ManagerState, err error) {
+func (c *FakeManagerStates) Create(managerState *v1alpha1.ManagerState) (result *v1alpha1.ManagerState, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootCreateAction(managerstatesResource, managerState), &v1alpha1.ManagerState{})
 	if obj == nil {
@@ -87,7 +85,7 @@ func (c *FakeManagerStates) Create(ctx context.Context, managerState *v1alpha1.M
 }
 
 // Update takes the representation of a managerState and updates it. Returns the server's representation of the managerState, and an error, if there is any.
-func (c *FakeManagerStates) Update(ctx context.Context, managerState *v1alpha1.ManagerState, opts v1.UpdateOptions) (result *v1alpha1.ManagerState, err error) {
+func (c *FakeManagerStates) Update(managerState *v1alpha1.ManagerState) (result *v1alpha1.ManagerState, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootUpdateAction(managerstatesResource, managerState), &v1alpha1.ManagerState{})
 	if obj == nil {
@@ -98,7 +96,7 @@ func (c *FakeManagerStates) Update(ctx context.Context, managerState *v1alpha1.M
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeManagerStates) UpdateStatus(ctx context.Context, managerState *v1alpha1.ManagerState, opts v1.UpdateOptions) (*v1alpha1.ManagerState, error) {
+func (c *FakeManagerStates) UpdateStatus(managerState *v1alpha1.ManagerState) (*v1alpha1.ManagerState, error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootUpdateSubresourceAction(managerstatesResource, "status", managerState), &v1alpha1.ManagerState{})
 	if obj == nil {
@@ -108,22 +106,22 @@ func (c *FakeManagerStates) UpdateStatus(ctx context.Context, managerState *v1al
 }
 
 // Delete takes name of the managerState and deletes it. Returns an error if one occurs.
-func (c *FakeManagerStates) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeManagerStates) Delete(name string, options *v1.DeleteOptions) error {
 	_, err := c.Fake.
 		Invokes(testing.NewRootDeleteAction(managerstatesResource, name), &v1alpha1.ManagerState{})
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeManagerStates) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(managerstatesResource, listOpts)
+func (c *FakeManagerStates) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
+	action := testing.NewRootDeleteCollectionAction(managerstatesResource, listOptions)
 
 	_, err := c.Fake.Invokes(action, &v1alpha1.ManagerStateList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched managerState.
-func (c *FakeManagerStates) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ManagerState, err error) {
+func (c *FakeManagerStates) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.ManagerState, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootPatchSubresourceAction(managerstatesResource, name, pt, data, subresources...), &v1alpha1.ManagerState{})
 	if obj == nil {

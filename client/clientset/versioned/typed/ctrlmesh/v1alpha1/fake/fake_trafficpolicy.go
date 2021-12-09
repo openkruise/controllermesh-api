@@ -19,8 +19,6 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "github.com/openkruise/controllermesh-api/ctrlmesh/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
@@ -41,7 +39,7 @@ var trafficpoliciesResource = schema.GroupVersionResource{Group: "ctrlmesh.kruis
 var trafficpoliciesKind = schema.GroupVersionKind{Group: "ctrlmesh.kruise.io", Version: "v1alpha1", Kind: "TrafficPolicy"}
 
 // Get takes name of the trafficPolicy, and returns the corresponding trafficPolicy object, and an error if there is any.
-func (c *FakeTrafficPolicies) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.TrafficPolicy, err error) {
+func (c *FakeTrafficPolicies) Get(name string, options v1.GetOptions) (result *v1alpha1.TrafficPolicy, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewGetAction(trafficpoliciesResource, c.ns, name), &v1alpha1.TrafficPolicy{})
 
@@ -52,7 +50,7 @@ func (c *FakeTrafficPolicies) Get(ctx context.Context, name string, options v1.G
 }
 
 // List takes label and field selectors, and returns the list of TrafficPolicies that match those selectors.
-func (c *FakeTrafficPolicies) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.TrafficPolicyList, err error) {
+func (c *FakeTrafficPolicies) List(opts v1.ListOptions) (result *v1alpha1.TrafficPolicyList, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewListAction(trafficpoliciesResource, trafficpoliciesKind, c.ns, opts), &v1alpha1.TrafficPolicyList{})
 
@@ -74,14 +72,14 @@ func (c *FakeTrafficPolicies) List(ctx context.Context, opts v1.ListOptions) (re
 }
 
 // Watch returns a watch.Interface that watches the requested trafficPolicies.
-func (c *FakeTrafficPolicies) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeTrafficPolicies) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(trafficpoliciesResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a trafficPolicy and creates it.  Returns the server's representation of the trafficPolicy, and an error, if there is any.
-func (c *FakeTrafficPolicies) Create(ctx context.Context, trafficPolicy *v1alpha1.TrafficPolicy, opts v1.CreateOptions) (result *v1alpha1.TrafficPolicy, err error) {
+func (c *FakeTrafficPolicies) Create(trafficPolicy *v1alpha1.TrafficPolicy) (result *v1alpha1.TrafficPolicy, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewCreateAction(trafficpoliciesResource, c.ns, trafficPolicy), &v1alpha1.TrafficPolicy{})
 
@@ -92,7 +90,7 @@ func (c *FakeTrafficPolicies) Create(ctx context.Context, trafficPolicy *v1alpha
 }
 
 // Update takes the representation of a trafficPolicy and updates it. Returns the server's representation of the trafficPolicy, and an error, if there is any.
-func (c *FakeTrafficPolicies) Update(ctx context.Context, trafficPolicy *v1alpha1.TrafficPolicy, opts v1.UpdateOptions) (result *v1alpha1.TrafficPolicy, err error) {
+func (c *FakeTrafficPolicies) Update(trafficPolicy *v1alpha1.TrafficPolicy) (result *v1alpha1.TrafficPolicy, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewUpdateAction(trafficpoliciesResource, c.ns, trafficPolicy), &v1alpha1.TrafficPolicy{})
 
@@ -104,7 +102,7 @@ func (c *FakeTrafficPolicies) Update(ctx context.Context, trafficPolicy *v1alpha
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeTrafficPolicies) UpdateStatus(ctx context.Context, trafficPolicy *v1alpha1.TrafficPolicy, opts v1.UpdateOptions) (*v1alpha1.TrafficPolicy, error) {
+func (c *FakeTrafficPolicies) UpdateStatus(trafficPolicy *v1alpha1.TrafficPolicy) (*v1alpha1.TrafficPolicy, error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewUpdateSubresourceAction(trafficpoliciesResource, "status", c.ns, trafficPolicy), &v1alpha1.TrafficPolicy{})
 
@@ -115,7 +113,7 @@ func (c *FakeTrafficPolicies) UpdateStatus(ctx context.Context, trafficPolicy *v
 }
 
 // Delete takes name of the trafficPolicy and deletes it. Returns an error if one occurs.
-func (c *FakeTrafficPolicies) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeTrafficPolicies) Delete(name string, options *v1.DeleteOptions) error {
 	_, err := c.Fake.
 		Invokes(testing.NewDeleteAction(trafficpoliciesResource, c.ns, name), &v1alpha1.TrafficPolicy{})
 
@@ -123,15 +121,15 @@ func (c *FakeTrafficPolicies) Delete(ctx context.Context, name string, opts v1.D
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeTrafficPolicies) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(trafficpoliciesResource, c.ns, listOpts)
+func (c *FakeTrafficPolicies) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
+	action := testing.NewDeleteCollectionAction(trafficpoliciesResource, c.ns, listOptions)
 
 	_, err := c.Fake.Invokes(action, &v1alpha1.TrafficPolicyList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched trafficPolicy.
-func (c *FakeTrafficPolicies) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.TrafficPolicy, err error) {
+func (c *FakeTrafficPolicies) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.TrafficPolicy, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewPatchSubresourceAction(trafficpoliciesResource, c.ns, name, pt, data, subresources...), &v1alpha1.TrafficPolicy{})
 

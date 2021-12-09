@@ -26,13 +26,10 @@ import (
 )
 
 // ManagerStateLister helps list ManagerStates.
-// All objects returned here must be treated as read-only.
 type ManagerStateLister interface {
 	// List lists all ManagerStates in the indexer.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1alpha1.ManagerState, err error)
 	// Get retrieves the ManagerState from the index for a given name.
-	// Objects returned here must be treated as read-only.
 	Get(name string) (*v1alpha1.ManagerState, error)
 	ManagerStateListerExpansion
 }
